@@ -1,7 +1,8 @@
 # agrertry
+
 Agile Resin Infusion in composite parts production
 
+## AnyDesk info
 
-anydesk info:
-ID: 1 914 803 666
-pass: iThermAI
+- ID: 1 914 803 666
+- pass: iThermAI
