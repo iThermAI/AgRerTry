@@ -14,3 +14,8 @@ Agile Resin Infusion in composite parts production
 ## Google Drive account for Data
 - email: mcmclangevin@gmail.com
 - pass: tP$1kx9Ah@
+
+## Text file info:
+- first col: timestamp
+- second col: resistance (curing sensor)
+- third col: temperature (in celcius)
