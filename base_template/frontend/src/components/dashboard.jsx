@@ -26,10 +26,10 @@ const Dashboard = () => {
         startExp,
         finishExp,
         SummaryExp,
-        StartOverExperiment
+        StartOverExperiment,
+        expCatRatio,
+        setExpCatRatio
     } = useContext(InformationContext);
-
-    const [progress, setProgress] = useState(50);
 
     return (
         <>
@@ -54,20 +54,6 @@ const Dashboard = () => {
                                 <SummarizeIcon sx={{ fontSize: "30px !important" }} />
                                 <span className="sidebar-btn-txt" >Summary of Expreriment</span>
                                 <span className="sidebar-btn-txt-bottom">Summary</span>
-                            </li>
-                            <li className={`li-items`}>
-                                <Button variant="contained" sx={{
-                                    background: "#5bf93f",
-                                    color: "black",
-                                    width: "100%"
-                                }}>Oil Pump Maintenance Check</Button>
-                            </li>
-                            <li className={`li-items`} >
-                                <Button variant="contained" sx={{
-                                    background: "#5bf93f",
-                                    color: "black",
-                                    width: "100%"
-                                }}>Optimold Sensor Maintenance Check</Button>
                             </li>
                         </ul>
                     </div>
@@ -94,9 +80,18 @@ const Dashboard = () => {
                     {status === "initiate" && (
                         <div className={`warning-box ${status === "initiate" ? 'fade-in' : 'fade-out'}`}>
                             <div style={{ margin: "5px" }}>Best Catalyst/Resin Ratio is: <span className='catRatio-info'>{catRatio}</span></div>
+                            <div style={{ margin: "10px 0" }}>
+                            <label htmlFor="expCatRatio">Enter Catalyst/Resin Ratio: </label>
+                            <input 
+                                id="expCatRatio"
+                                type="number"
+                                onChange={(e) => {setExpCatRatio(e.target.value); console.log(expCatRatio)}} // Assuming you have a state variable called resinRatio and a setter setResinRatio
+                            />
+                            </div>
                             <div>If you are ready, press next to go to dashboard.</div>
                             <div>
-                                <Button variant="contained" onClick={startExp} sx={{
+                                <Button className={`${expCatRatio === null ? 'disabled-button' : ''}`}
+                                    variant="contained" onClick={startExp} sx={{
                                     background: "#f9dd3f",
                                     color: "black",
                                     fontSize: "1em",
@@ -108,25 +103,11 @@ const Dashboard = () => {
 
                     {(status === "start" || status === "finish") && (<div className={`dashboard-box ${(status === "start" || status === "finish") ? 'fade-in' : 'fade-out'}`}>
                         <div className="catRatio-box">
-                            Optimal Catalyst/Resin Ratio:  <span className='catRatio-info'>{catRatio}</span>
+                            Current Catalyst/Resin Ratio:  <span className='catRatio-info'>{expCatRatio}</span>
                         </div>
                         {status === "finish" && <div className="catRatio-box" style={{ background: "#5a1010" }}>
                             Final Score of Infusion: <span className='catRatio-info' style={{ background: "#3f0000" }}>{score}</span>
                         </div>}
-                        <div style={{ width: "97%", margin: "auto", marginBottom: "20px" }}>
-                            <div className="text">Oil Pump Usage Period [Maximum: 80 hours]</div>
-                            <div className="progress-bar-container">
-                                <progress className="progress-bar" value={100} max={100} />
-                                <div className="progress-text">{`100%`} </div>
-                            </div>
-                        </div>
-                        <div style={{ width: "97%", margin: "auto", marginBottom: "20px" }}>
-                            <div className="text">Optimold Sensor Usage Period [Maximum: 10 hours]</div>
-                            <div className="progress-bar-container1">
-                                <progress className="progress-bar1" value={100} max={100} />
-                                <div className="progress-text">{`100%`} </div>
-                            </div>
-                        </div>
                         <div className="charts">
                             <div className="image-container" style={status === "finish" ? { flexDirection: 'row' } : { flexDirection: 'column' }}>
                                 {
