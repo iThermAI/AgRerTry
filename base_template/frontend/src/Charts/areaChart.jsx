@@ -92,7 +92,7 @@ const AreaChart = (props) => {
 
     return (
         <>
-        {time.length > 0 && <ReactEcharts option={option} />}
+        {(time.length > 0) && <ReactEcharts option={option} />}
         </>
     );
 };

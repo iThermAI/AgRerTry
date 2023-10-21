@@ -19,7 +19,7 @@ export default function App() {
       }
     },
   });
-  const [auth, setAuth] = useState(localStorage.getItem('token') ? true : false);
+  const [auth, setAuth] = useState(localStorage.getItem('token') ? false : true);
   const onAuthentication = (value) => {
     setAuth(value)
   }
@@ -57,6 +57,7 @@ export default function App() {
   const [id, setId] = useState(null);
   const [score, setScore] = useState(null);
   const previousTimeRef = useRef(null);
+  const [expCatRatio, setExpCatRatio] = useState(null);
 
   const initiateExp = () => {
     localStorage.setItem("status", "initiate");
@@ -73,6 +74,7 @@ export default function App() {
     clearInterval(requestInterval);
     localStorage.setItem("status", "start");
     setStatus("start");
+    
 
     await axios.get("/api/start").then((res) => {
       console.log(res);
@@ -112,6 +114,7 @@ export default function App() {
         setRequestInterval(interval);
       })
       .catch(err => {
+
         console.log(err);
       });
 
@@ -219,7 +222,9 @@ export default function App() {
             startExp,
             finishExp,
             SummaryExp,
-            StartOverExperiment
+            StartOverExperiment,
+            expCatRatio,
+            setExpCatRatio
           }}>
             <Protect path='/dashboard' component={Dashboard} />
           </InformationContext.Provider>
