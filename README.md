@@ -9,8 +9,10 @@ Agile Resin Infusion in composite parts production
 
 ## RustDesk info
 
-- public key: vi+IGeEJ68NMns4Ar5lBcNFQMtIGT6kAPMgVMRxRXzE=
-- G02 IP: 192.168.129.14
+- relay server public key: gYS5WUCmXeOqwjofeqFQfJY9PsLfXqvtfLUH08jNee0=
+- relay server ip: 130.162.226.36
+- rust desk id: 380 425 066
+- rust desk pass: 1ThermAI
 
 ## Google Drive account for Data
 
