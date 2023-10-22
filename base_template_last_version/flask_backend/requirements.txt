@@ -1,0 +1,5 @@
+Flask==2.0.1
+pandas
+moviepy
+pymongo
+scikit-learn
