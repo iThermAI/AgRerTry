@@ -34,3 +34,6 @@ password = urllib.parse.quote(password)
 RTSP_RGB_URL = f"rtsp://{username}:{password}@192.168.1.64:554/Streaming/Channels/101"
 RTSP_THERMAL_URL = f"rtsp://{username}:{password}@192.168.1.64:554/Streaming/Channels/102"
 ```
+
+## aitry user windows password
+43324332
