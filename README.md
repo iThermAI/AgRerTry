@@ -9,8 +9,8 @@ Agile Resin Infusion in composite parts production
 
 ## RustDesk info
 
-- relay server public key: gYS5WUCmXeOqwjofeqFQfJY9PsLfXqvtfLUH08jNee0=
-- relay server ip: 130.162.226.36
+- relay server public key:xmaLQ9TDP6oVhEZREcSvJOI+ImiGs8TsWFY5uieuKLk=
+- relay server ip: 87.107.105.200
 - rust desk id: 380 425 066
 - rust desk pass: 1ThermAI
 
