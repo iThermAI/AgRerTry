@@ -34,3 +34,7 @@ password = urllib.parse.quote(password)
 RTSP_RGB_URL = f"rtsp://{username}:{password}@192.168.1.64:554/Streaming/Channels/101"
 RTSP_THERMAL_URL = f"rtsp://{username}:{password}@192.168.1.64:554/Streaming/Channels/102"
 ```
+
+# Documentations
+
+- https://www.tldraw.com/r/n7mkRAVKz42WiwmiUVQcp?viewport=628%2C-194%2C1752%2C916&page=page%3Ayg8AF8Xw7olu_6M_SiyDJ
