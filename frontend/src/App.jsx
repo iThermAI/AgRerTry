@@ -11,6 +11,7 @@ import Protect from "./components/protect";
 import InformationContext from "./context/information";
 import axios from "axios";
 
+
 export default function App() {
   const theme = createTheme({
     palette: {
@@ -183,6 +184,12 @@ export default function App() {
     };
   }, [logoutTimer]);
 
+  useEffect(() => {
+    const socket = new WebSocket('ws://localhost:9997');
+    socket.addEventListener('message', (event) => {
+      console.log( event.data);
+    });
+  }, []);
   return (
     <>
       <ThemeProvider theme={theme}>

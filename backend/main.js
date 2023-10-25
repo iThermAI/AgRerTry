@@ -19,7 +19,8 @@ server.on('connection', (ws) => {
   console.log('front connected');
   // ws.send sensor info
   client.on('data', (data) => {
-    ws.emit('data',data)
+    // ws.emit('data',data)
+    ws.send(data.toString())
     console.log('sent sensor data:', data.toString());
   });
   
