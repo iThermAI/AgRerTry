@@ -6,7 +6,7 @@ const VideoPlayer = () => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
-        const player = new JSMpeg.Player(`ws://localhost:9999`, {
+        const player = new JSMpeg.Player(`ws://localhost:9998`, {
             canvas: canvasRef.current,
             autoplay: true,
         });

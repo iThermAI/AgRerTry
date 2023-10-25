@@ -114,7 +114,7 @@ const Dashboard = () => {
                                     (status === "start" || status === "finish") ? (
                                         <>
                                             {<VideoPlayer />}
-                                            {<VideoPlayer />}
+                                            {/* {<VideoPlayer />} */}
                                             {/* <img
                                                 src={image}
                                                 alt="Camera"
