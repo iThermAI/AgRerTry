@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import "./dashboard.scss";
 import {
     PlayCircleFilled as PlayCircleFilledIcon,
@@ -12,6 +12,7 @@ import AreaChart from '../Charts/areaChart';
 import "../sharedStyle.css";
 import InformationContext from '../context/information';
 import { Button } from "@mui/material";
+import VideoPlayer from './videoplayer';
 
 const Dashboard = () => {
     const {
@@ -25,33 +26,37 @@ const Dashboard = () => {
         startExp,
         finishExp,
         SummaryExp,
-        StartOverExperiment
+        StartOverExperiment,
+        expCatRatio,
+        setExpCatRatio
     } = useContext(InformationContext);
 
     return (
         <>
             <div className="dashboard-container align-comp">
-                <div className="sidebar">
-                    <ul>
-                        <li className={`li-items ${status === "initiate" || status === "start" ? 'disabled' : ''}`}
-                            onClick={status !== "initiate" && status !== "start" ? initiateExp : null}>
-                            <PlayCircleFilledIcon sx={{ fontSize: "30px !important" }} />
-                            <span className="sidebar-btn-txt" >Start Experiment</span>
-                            <span className="sidebar-btn-txt-bottom">Start</span>
-                        </li>
-                        <li className={`li-items ${status === null || status === "initiate" || status === "finish" ? 'disabled' : ''}`}
-                            onClick={status !== "null" ? finishExp : null}>
-                            <CancleIcon sx={{ fontSize: "30px !important" }} />
-                            <span className="sidebar-btn-txt" >Finish Experiment</span>
-                            <span className="sidebar-btn-txt-bottom">Finish</span>
-                        </li>
-                        <li className={`li-items ${status === null || status === "initiate" || status === "start" ? 'disabled' : ''}`}
-                            onClick={status !== "null" ? SummaryExp : null}>
-                            <SummarizeIcon sx={{ fontSize: "30px !important" }} />
-                            <span className="sidebar-btn-txt" >Summary of Expreriment</span>
-                            <span className="sidebar-btn-txt-bottom">Summary</span>
-                        </li>
-                    </ul>
+                <div className="sidebar" style={{ position: "relative", minWidth: "80px" }}>
+                    <div style={{ position: "fixed" }}>
+                        <ul>
+                            <li className={`li-items ${status === "initiate" || status === "start" ? 'disabled' : ''}`}
+                                onClick={status !== "initiate" && status !== "start" ? initiateExp : null}>
+                                <PlayCircleFilledIcon sx={{ fontSize: "30px !important" }} />
+                                <span className="sidebar-btn-txt" >Start Experiment</span>
+                                <span className="sidebar-btn-txt-bottom">Start</span>
+                            </li>
+                            <li className={`li-items ${status === null || status === "initiate" || status === "finish" ? 'disabled' : ''}`}
+                                onClick={status !== "null" ? finishExp : null}>
+                                <CancleIcon sx={{ fontSize: "30px !important" }} />
+                                <span className="sidebar-btn-txt" >Finish Experiment</span>
+                                <span className="sidebar-btn-txt-bottom">Finish</span>
+                            </li>
+                            <li className={`li-items ${status === null || status === "initiate" || status === "start" ? 'disabled' : ''}`}
+                                onClick={status !== "null" ? SummaryExp : null}>
+                                <SummarizeIcon sx={{ fontSize: "30px !important" }} />
+                                <span className="sidebar-btn-txt" >Summary of Expreriment</span>
+                                <span className="sidebar-btn-txt-bottom">Summary</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div className="main-content" style={(status === null || status === "initiate") ? { height: '100vh' } : {}}>
                     <div className="dashboard-title">
@@ -75,9 +80,18 @@ const Dashboard = () => {
                     {status === "initiate" && (
                         <div className={`warning-box ${status === "initiate" ? 'fade-in' : 'fade-out'}`}>
                             <div style={{ margin: "5px" }}>Best Catalyst/Resin Ratio is: <span className='catRatio-info'>{catRatio}</span></div>
+                            <div style={{ margin: "10px 0" }}>
+                            <label htmlFor="expCatRatio">Enter Catalyst/Resin Ratio: </label>
+                            <input 
+                                id="expCatRatio"
+                                type="number"
+                                onChange={(e) => {setExpCatRatio(e.target.value); console.log(expCatRatio)}} // Assuming you have a state variable called resinRatio and a setter setResinRatio
+                            />
+                            </div>
                             <div>If you are ready, press next to go to dashboard.</div>
                             <div>
-                                <Button variant="contained" onClick={startExp} sx={{
+                                <Button className={`${expCatRatio === null ? 'disabled-button' : ''}`}
+                                    variant="contained" onClick={startExp} sx={{
                                     background: "#f9dd3f",
                                     color: "black",
                                     fontSize: "1em",
@@ -89,7 +103,7 @@ const Dashboard = () => {
 
                     {(status === "start" || status === "finish") && (<div className={`dashboard-box ${(status === "start" || status === "finish") ? 'fade-in' : 'fade-out'}`}>
                         <div className="catRatio-box">
-                            Optimal Catalyst/Resin Ratio:  <span className='catRatio-info'>{catRatio}</span>
+                            Current Catalyst/Resin Ratio:  <span className='catRatio-info'>{expCatRatio}</span>
                         </div>
                         {status === "finish" && <div className="catRatio-box" style={{ background: "#5a1010" }}>
                             Final Score of Infusion: <span className='catRatio-info' style={{ background: "#3f0000" }}>{score}</span>
@@ -99,7 +113,9 @@ const Dashboard = () => {
                                 {
                                     (status === "start" || status === "finish") ? (
                                         <>
-                                            <img
+                                            {<VideoPlayer />}
+                                            {<VideoPlayer />}
+                                            {/* <img
                                                 src={image}
                                                 alt="Camera"
                                                 className="camera-image"
@@ -111,7 +127,7 @@ const Dashboard = () => {
                                                 alt="Camera"
                                                 className="camera-image"
                                                 style={status === "finish" ? { width: '45%' } : { width: '100%' }}
-                                            />
+                                            /> */}
                                         </>
                                     ) : <div style={{ width: '100%', height: '100%', background: "#1f263c" }} />
                                 }
@@ -139,13 +155,13 @@ const Dashboard = () => {
                                 <div className="chart-info-title" style={{ margin: "15px 5px", fontSize: "20px", fontWeight: "bold" }}>
                                     Room Temperature:
                                 </div>
-                                { image && <AreaChart index="resin" />}
+                                {image && <AreaChart index="resin" />}
                             </div>
                             <div className="area-chart">
                                 <div className="chart-info-title" style={{ margin: "15px 5px", fontSize: "20px", fontWeight: "bold" }}>
                                     Curing Level:
                                 </div>
-                                { image && <AreaChart index="curingSensor" />}
+                                {image && <AreaChart index="curingSensor" />}
                             </div>
                         </div>
                         {status === "finish" && <div style={{
