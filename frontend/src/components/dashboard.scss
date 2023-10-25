@@ -42,6 +42,15 @@
   cursor: not-allowed;
 }
 
+.disabled-button {
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+  background-color: #e0e0e0;
+  border: 1px solid #cccccc;
+  color: #999999;
+}
+
 .main-content {
   background-color: #494b59;
   display: flex;
@@ -279,4 +288,67 @@
   to {
     opacity: 0;
   }
+}
+
+.progress-bar-container, .progress-bar-container1 {
+  position: relative;
+  width: 100%;
+}
+
+.progress-bar, .progress-bar1 {
+  width: 100%;
+  height: 50px;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 17px;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.progress-bar-container .progress-bar {
+  background-color: #e0e0e0; /* Set the background color of the progress bar */
+  border-radius: 10px; 
+  overflow: hidden;
+}
+
+.progress-bar-container .progress-bar::-webkit-progress-value {
+  background-color: #ff0404; /* Set the color of the progress bar itself */
+  border-radius: 10px; 
+}
+
+.text{
+  font-size: 22px;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.progress-bar-container1 .progress-bar1 {
+  background-color: #e0e0e0; /* Set the background color of the progress bar */
+  border-radius: 10px; 
+  overflow: hidden;
+}
+
+.progress-bar-container1 .progress-bar1::-webkit-progress-value {
+  background-color: #ff0404; /* Set the color of the progress bar itself */
+  border-radius: 10px; 
+}
+
+
+#expCatRatio {
+  padding: 8px 12px;
+  font-size: 1em;
+  border: 6px solid #ccc;
+  border-radius: 40px;
+  width: 100px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+#expCatRatio:focus {
+  border-color: #f9dd3f;
 }

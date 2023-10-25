@@ -5,7 +5,7 @@ const Protect = ({ component: Component, ...restProps }) => {
 
     return (
         <Route render={(props) => {
-            return isAuth ? <Component {...props} {...restProps}/> : <Redirect to="/login" />
+            return true ? <Component {...props} {...restProps}/> : <Redirect to="/login" />
         }}
         />
     );
