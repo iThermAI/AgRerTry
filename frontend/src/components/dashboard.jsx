@@ -16,6 +16,8 @@ import VideoPlayer from './videoplayer';
 
 const Dashboard = () => {
     const {
+        temp,
+        cureSensorTemp,
         image,
         imageTH,
         status,
@@ -30,6 +32,7 @@ const Dashboard = () => {
         expCatRatio,
         setExpCatRatio
     } = useContext(InformationContext);
+
 
     return (
         <>
@@ -81,22 +84,22 @@ const Dashboard = () => {
                         <div className={`warning-box ${status === "initiate" ? 'fade-in' : 'fade-out'}`}>
                             <div style={{ margin: "5px" }}>Best Catalyst/Resin Ratio is: <span className='catRatio-info'>{catRatio}</span></div>
                             <div style={{ margin: "10px 0" }}>
-                            <label htmlFor="expCatRatio">Enter Catalyst/Resin Ratio: </label>
-                            <input 
-                                id="expCatRatio"
-                                type="number"
-                                onChange={(e) => {setExpCatRatio(e.target.value); console.log(expCatRatio)}} // Assuming you have a state variable called resinRatio and a setter setResinRatio
-                            />
+                                <label htmlFor="expCatRatio">Enter Catalyst/Resin Ratio: </label>
+                                <input
+                                    id="expCatRatio"
+                                    type="number"
+                                    onChange={(e) => { setExpCatRatio(e.target.value); console.log(expCatRatio) }} // Assuming you have a state variable called resinRatio and a setter setResinRatio
+                                />
                             </div>
                             <div>If you are ready, press next to go to dashboard.</div>
                             <div>
                                 <Button className={`${expCatRatio === null ? 'disabled-button' : ''}`}
                                     variant="contained" onClick={startExp} sx={{
-                                    background: "#f9dd3f",
-                                    color: "black",
-                                    fontSize: "1em",
-                                    margin: "30px 0"
-                                }}>Next</Button>
+                                        background: "#f9dd3f",
+                                        color: "black",
+                                        fontSize: "1em",
+                                        margin: "30px 0"
+                                    }}>Next</Button>
                             </div>
                         </div>
                     )}
@@ -113,7 +116,8 @@ const Dashboard = () => {
                                 {
                                     (status === "start" || status === "finish") ? (
                                         <>
-                                            {<VideoPlayer />}
+                                            {<VideoPlayer vidUrl="ws://localhost:9998" />}
+                                            {<VideoPlayer vidUrl="ws://localhost:9999" />}
                                             {/* {<VideoPlayer />} */}
                                             {/* <img
                                                 src={image}
@@ -135,16 +139,16 @@ const Dashboard = () => {
                             {status === "start" && <div className="gauge-container">
                                 <div className="chart-info" style={{ minHeight: "40vh" }}>
                                     <div className="chart-info-title" style={{ margin: "15px 5px", fontSize: "20px", fontWeight: "bold" }}>
-                                        The more information:
+                                        More Information:
                                     </div>
                                     <ul>
-                                        <li>Catalyst/Resin Ratio:<span style={{ color: "white" }}> {catRatio}</span></li>
+                                        <li>Catalyst/Resin Ratio:<span style={{ color: "white" }}> {expCatRatio}</span></li>
                                         <li>Initial Room Temperature:<span style={{ color: "white" }}> {initialRoomTemp} </span></li>
                                     </ul>
                                 </div>
                                 <div className="gauge-chart" style={{ minHeight: "45vh" }}>
                                     <div className="chart-info-title" style={{ margin: "15px 5px", fontSize: "20px", fontWeight: "bold" }}>
-                                        Room Temperature:
+                                        Room Temperature: {temp[temp.length - 1]}
                                     </div>
                                     <GaugeChart />
                                 </div>
@@ -153,13 +157,13 @@ const Dashboard = () => {
                         <div className="bar-charts-container">
                             <div className="area-chart">
                                 <div className="chart-info-title" style={{ margin: "15px 5px", fontSize: "20px", fontWeight: "bold" }}>
-                                    Room Temperature:
+                                    Room Temperature: {temp[temp.length - 1]}
                                 </div>
                                 {image && <AreaChart index="resin" />}
                             </div>
                             <div className="area-chart">
                                 <div className="chart-info-title" style={{ margin: "15px 5px", fontSize: "20px", fontWeight: "bold" }}>
-                                    Curing Level:
+                                    Curing Level: {cureSensorTemp[cureSensorTemp.length - 1]}
                                 </div>
                                 {image && <AreaChart index="curingSensor" />}
                             </div>

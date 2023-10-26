@@ -50,6 +50,13 @@ export default function App() {
   const toggleResinFlow = () => {
     setResinFlow(!resinFlow);
   }
+  const socket = new WebSocket('ws://localhost:9997');
+  const [parts, setParts] = useState([]); // returns data of sensors
+  socket.addEventListener('message', (event) => {
+    setParts(event.data.replace(/\r/g, ' ').replace(/[a-zA-Z\n]/g, '').split(' '));
+    setTemp(prevTemp => [...prevTemp, parseFloat(parts[0])]);
+    setCureSensorTemp(prevCureTemp => [...prevCureTemp, parseFloat(parts[2])]);
+  });
 
   const [requestInterval, setRequestInterval] = useState(null);
   const [status, setStatus] = useState(localStorage.getItem('status') ? localStorage.getItem('status') : null);
@@ -65,7 +72,7 @@ export default function App() {
     setStatus("initiate");
     axios.get("/api/initiate").then((res) => {
       setCatRatio(res.data.catRatio);
-      localStorage.setItem("catRatio", res.data.catRatio);      
+      localStorage.setItem("catRatio", res.data.catRatio);
     }).catch((err) => {
       console.log(err);
     });
@@ -131,7 +138,7 @@ export default function App() {
     setStatus("finish");
     clearInterval(requestInterval);
     axios.get("/api/finish").then((res) => {
-      setScore(res.data.score);    
+      setScore(res.data.score);
     }).catch((err) => {
       console.log(err);
     });
@@ -184,12 +191,6 @@ export default function App() {
     };
   }, [logoutTimer]);
 
-  useEffect(() => {
-    const socket = new WebSocket('ws://localhost:9997');
-    socket.addEventListener('message', (event) => {
-      console.log( event.data);
-    });
-  }, []);
   return (
     <>
       <ThemeProvider theme={theme}>
