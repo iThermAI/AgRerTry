@@ -10,7 +10,9 @@ import { useState, useEffect, useRef } from "react";
 import Protect from "./components/protect";
 import InformationContext from "./context/information";
 import axios from "axios";
+import useWebSocket from 'react-use-websocket';
 
+// import { socket } from './main'
 
 export default function App() {
   const theme = createTheme({
@@ -41,8 +43,8 @@ export default function App() {
     setLogoutTimer(null);
   }
   // Get the value from backend
-  const [temp, setTemp] = useState([]);
-  const [cureSensorTemp, setCureSensorTemp] = useState([]);
+  const [temp, setTemp] = useState(null);
+  const [cureSensorTemp, setCureSensorTemp] = useState(null);
   const [time, setTime] = useState([]);
   const [image, setImage] = useState(null);
   const [imageTH, setImageTH] = useState(null);
@@ -50,27 +52,37 @@ export default function App() {
   const toggleResinFlow = () => {
     setResinFlow(!resinFlow);
   }
-  const socket = new WebSocket('ws://localhost:9997');
   const [parts, setParts] = useState([]); // returns data of sensors
-  socket.addEventListener('message', (event) => {
-    setParts(event.data.replace(/\r/g, ' ').replace(/[a-zA-Z\n]/g, '').split(' '));
-    setTemp(prevTemp => [...prevTemp, parseFloat(parts[0])]);
-    setCureSensorTemp(prevCureTemp => [...prevCureTemp, parseFloat(parts[2])]);
-  });
+
 
   const [requestInterval, setRequestInterval] = useState(null);
   const [status, setStatus] = useState(localStorage.getItem('status') ? localStorage.getItem('status') : null);
   const [catRatio, setCatRatio] = useState(localStorage.getItem('catRatio') ? localStorage.getItem('catRatio') : null);
-  const [initialRoomTemp, setInitialRoomTemp] = useState(localStorage.getItem('initialRoomTemp') ? localStorage.getItem('initialRoomTemp') : null);
+  const [initialRoomTemp, setInitialRoomTemp] = useState(localStorage.getItem('initialRoomTemp') ? localStorage.getItem('initialRoomTemp') : 22);
   const [id, setId] = useState(null);
   const [score, setScore] = useState(null);
   const previousTimeRef = useRef(null);
   const [expCatRatio, setExpCatRatio] = useState(null);
 
+  // const socket = new WebSocket();
+  // socket.addEventListener('message', )
+
+  useWebSocket('ws://localhost:9997', {
+    onMessage: (event) => {
+      setParts(event.data.replace(/\r/g, ' ').replace(/[a-zA-Z\n]/g, '').split(' '));
+      // setTemp(prevTemp => [...prevTemp, parseFloat(parts[0])]);
+      parseFloat(parts[0]) && setTemp(parseFloat(parts[0]));
+
+      // setCureSensorTemp(prevCureTemp => [...prevCureTemp, parseFloat(parts[2])]);
+      parseFloat(parts[2]) && setCureSensorTemp(parseFloat(parts[2]));
+    }
+  })
+
   const initiateExp = () => {
     localStorage.setItem("status", "initiate");
     setStatus("initiate");
     axios.get("/api/initiate").then((res) => {
+      console.log(res.data);
       setCatRatio(res.data.catRatio);
       localStorage.setItem("catRatio", res.data.catRatio);
     }).catch((err) => {
@@ -78,12 +90,13 @@ export default function App() {
     });
   }
 
-  const startExp = async () => {
+
+  const startExp = async (ratio) => {
     clearInterval(requestInterval);
     localStorage.setItem("status", "start");
     setStatus("start");
 
-    await axios.get("/api/start").then((res) => {
+    await axios.post("/api/start", { ratio }).then((res) => {
       console.log(res);
       setId(res.data.id);
     }).catch((err) => {
@@ -91,47 +104,52 @@ export default function App() {
     });
   }
 
-  useEffect(() => {
-    axios.post("/node/createTable",
-      {
-        id: id
-      })
-      .then(res => {
-        console.log(res);
-        const interval = setInterval(() => {
-          axios.get("/node/getInfo")
-            .then((res) => {
-              if (res.data.Time && res.data.Time !== previousTimeRef.current) {
-                setTime(prevTime => [...prevTime, res.data.Time.toFixed(1)]);
-                setTemp(prevTemp => [...prevTemp, res.data.resinTemp]);
-                setCureSensorTemp(prevTime => [...prevTime, res.data.cureTemp]);
-              }
-              console.log("info", res.data.Time, previousTimeRef.current);
-              previousTimeRef.current = res.data.Time;
-
-              setImage('data:image/jpeg;base64,' + res.data.image_rgb);
-              setImageTH('data:image/jpeg;base64,' + res.data.image_th);
-            })
-            .catch(err => {
-              console.log(err);
-            });
 
 
-        }, 1000);
-        setRequestInterval(interval);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  // useEffect(() => {
+  //   axios.post("/node/createTable",
+  //     {
+  //       id: id
+  //     })
+  //     .then(res => {
+  //       console.log(res);
+  //       const interval = setInterval(() => {
+  //         axios.get("/node/getInfo")
+  //           .then((res) => {
+  //             if (res.data.Time && res.data.Time !== previousTimeRef.current) {
+  //               setTime(prevTime => [...prevTime, res.data.Time.toFixed(1)]);
+  //               setTemp(prevTemp => [...prevTemp, res.data.resinTemp]);
+  //               setCureSensorTemp(prevTime => [...prevTime, res.data.cureTemp]);
+  //             }
+  //             console.log("info", res.data.Time, previousTimeRef.current);
+  //             previousTimeRef.current = res.data.Time;
 
-  }, [id]);
+  //             setImage('data:image/jpeg;base64,' + res.data.image_rgb);
+  //             setImageTH('data:image/jpeg;base64,' + res.data.image_th);
+  //           })
+  //           .catch(err => {
+  //             console.log(err);
+  //           });
 
-  useEffect(() => {
-    if (temp.length === 1) {
-      setInitialRoomTemp(temp[0]);
-      localStorage.setItem("initialRoomTemp", temp[0]);
-    }
-  }, [temp]);
+
+  //       }, 1000);
+  //       setRequestInterval(interval);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+
+  // }, [id]);
+
+  // useEffect(() => {
+  //   if (temp.length === 1) {
+  //     setInitialRoomTemp(temp[0]);
+  //     localStorage.setItem("initialRoomTemp", temp[0]);
+
+  //   }
+  //   console.log(temp);
+  // }, [temp]);
+
 
   const finishExp = () => {
     localStorage.setItem("status", "finish");
@@ -160,8 +178,8 @@ export default function App() {
     localStorage.removeItem('initialRoomTemp');
     setStatus(null);
     clearInterval(requestInterval);
-    await setTemp([]);
-    await setCureSensorTemp([]);
+    await setTemp(null);
+    await setCureSensorTemp(null);
     await setTime([]);
     axios.get("/api/finish").then((res) => {
       console.log(res.data);

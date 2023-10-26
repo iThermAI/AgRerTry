@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import "./dashboard.scss";
 import {
     PlayCircleFilled as PlayCircleFilledIcon,
@@ -13,8 +13,10 @@ import "../sharedStyle.css";
 import InformationContext from '../context/information';
 import { Button } from "@mui/material";
 import VideoPlayer from './videoplayer';
+import axios from 'axios';
 
 const Dashboard = () => {
+
     const {
         temp,
         cureSensorTemp,
@@ -33,6 +35,13 @@ const Dashboard = () => {
         setExpCatRatio
     } = useContext(InformationContext);
 
+    // must implement a function to get the current ratio from api using experiment id or just get the last experiment ration
+    useEffect(() => {
+        (async () => {
+            const { data: { ratio } } = await axios.get('/api/ratio')
+            await setExpCatRatio(ratio)
+        })()
+    }, [])
 
     return (
         <>
@@ -88,13 +97,13 @@ const Dashboard = () => {
                                 <input
                                     id="expCatRatio"
                                     type="number"
-                                    onChange={(e) => { setExpCatRatio(e.target.value); console.log(expCatRatio) }} // Assuming you have a state variable called resinRatio and a setter setResinRatio
+                                    onChange={(e) => { setExpCatRatio(e.target.value); }} // Assuming you have a state variable called resinRatio and a setter setResinRatio
                                 />
                             </div>
                             <div>If you are ready, press next to go to dashboard.</div>
                             <div>
                                 <Button className={`${expCatRatio === null ? 'disabled-button' : ''}`}
-                                    variant="contained" onClick={startExp} sx={{
+                                    variant="contained" onClick={() => startExp(expCatRatio)} sx={{
                                         background: "#f9dd3f",
                                         color: "black",
                                         fontSize: "1em",
@@ -148,7 +157,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="gauge-chart" style={{ minHeight: "45vh" }}>
                                     <div className="chart-info-title" style={{ margin: "15px 5px", fontSize: "20px", fontWeight: "bold" }}>
-                                        Room Temperature: {temp[temp.length - 1]}
+                                        Room Temperature: {temp}
                                     </div>
                                     <GaugeChart />
                                 </div>
@@ -157,13 +166,13 @@ const Dashboard = () => {
                         <div className="bar-charts-container">
                             <div className="area-chart">
                                 <div className="chart-info-title" style={{ margin: "15px 5px", fontSize: "20px", fontWeight: "bold" }}>
-                                    Room Temperature: {temp[temp.length - 1]}
+                                    Room Temperature: {temp}
                                 </div>
                                 {image && <AreaChart index="resin" />}
                             </div>
                             <div className="area-chart">
                                 <div className="chart-info-title" style={{ margin: "15px 5px", fontSize: "20px", fontWeight: "bold" }}>
-                                    Curing Level: {cureSensorTemp[cureSensorTemp.length - 1]}
+                                    Curing Level: {cureSensorTemp}
                                 </div>
                                 {image && <AreaChart index="curingSensor" />}
                             </div>

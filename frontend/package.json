@@ -26,6 +26,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^5.3.4",
+    "react-use-websocket": "^4.5.0",
     "sass": "^1.63.2",
     "socket.io-client": "^4.6.2",
     "yup": "^1.2.0"
