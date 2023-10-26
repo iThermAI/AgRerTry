@@ -111,35 +111,12 @@ const Dashboard = () => {
 
                     {status === "initiate" && (
                         <div className={`warning-box ${status === "initiate" ? 'fade-in' : 'fade-out'}`}>
-                            <div style={{ margin: "5px" }}>Best Catalyst1 or trig93 weight in grams is: <span className='catRatio-info'>{(cat1 * resin / 24).toFixed(2)}</span></div>
-                            <div style={{ margin: "5px" }}>Best Catalyst2 or trig524 weight in grams is: <span className='catRatio-info'>{(cat2 * resin / 24).toFixed(2)}</span></div>
-                            <div style={{ margin: "5px" }}>Best Accelerator or cob 6% weight in grams is: <span className='catRatio-info'>{(acc * resin / 24).toFixed(2)    }</span></div>
-                            <div className='input-container' style={{ margin: "10px 0" }}>
-                                <label htmlFor="expCatRatio">Enter Catalyst1 weight for current experiment in grams: </label>
-                                <input
-                                    className='input'
-                                    id="expCat1"
-                                    type="number"
-                                    onChange={(e) => { setExpCat1(e.target.value); }} // Assuming you have a state variable called resinRatio and a setter setResinRatio
-                                />
-                                                                <label htmlFor="expCatRatio">Enter Catalyst2 weight for current experiment in grams: </label>
-                                <input
-                                className='input'
-                                    id="expCat2"
-                                    type="number"
-                                    onChange={(e) => { setExpCat2(e.target.value); }} // Assuming you have a state variable called resinRatio and a setter setResinRatio
-                                />
-                                                                <label htmlFor="expCatRatio">Enter Accelerator weight for current experiment in grams: </label>
-                                <input
-                                className='input'
-                                    id="expAcc"
-                                    type="number"
-                                    onChange={(e) => { setExpAcc(e.target.value); }} // Assuming you have a state variable called resinRatio and a setter setResinRatio
-                                />
-                            </div>
-                            <div>If you are ready, press next to go to dashboard.</div>
+                            <div style={{ margin: "5px" }}>Best Catalyst1 or trig93 weight in grams is: <span className='catRatio-info'>{(cat1 * resin / 24)}</span></div>
+                            <div style={{ margin: "5px" }}>Best Catalyst2 or trig524 weight in grams is: <span className='catRatio-info'>{(cat2 * resin / 24)}</span></div>
+                            <div style={{ margin: "5px" }}>Best Accelerator or cob 6% weight in grams is: <span className='catRatio-info'>{(acc * resin / 24)}</span></div>
+                            <div style={{ marginTop: "10px" }}>If you are ready, press next to go to dashboard.</div>
                             <div>
-                                <Button className={`${(expCat1 === null || expCat1 === "" || expCat2 === null || expCat2 === "" || expAcc === null || expAcc === "") ? 'disabled-button' : ''}`}
+                                <Button 
                                     variant="contained" onClick={() => startExp(expCat1, expCat2, expAcc)} sx={{
                                         background: "#f9dd3f",
                                         color: "black",
@@ -152,7 +129,7 @@ const Dashboard = () => {
 
                     {(status === "start" || status === "finish") && (<div className={`dashboard-box ${(status === "start" || status === "finish") ? 'fade-in' : 'fade-out'}`}>
                         <div className="catRatio-box">
-                            Current Catalyst1/Catalyst2/Acc/Resin weights:  <span className='catRatio-info'>{expCat1},{expCat2},{expAcc},{resin},</span>
+                            recommended Catalyst1/Catalyst2/Acc/resin weights:  <span className='catRatio-info'>{cat1 ? cat1 * resin / 24 : 0},{cat2 ? cat2 * resin / 24 : 0},{acc? acc * resin / 24 : 0},{resin? resin : 0}</span>
                         </div>
                         {status === "finish" && <div className="catRatio-box" style={{ background: "#5a1010" }}>
                             Final Score of Infusion: <span className='catRatio-info' style={{ background: "#3f0000" }}>{score}</span>
@@ -188,9 +165,6 @@ const Dashboard = () => {
                                         More Information:
                                     </div>
                                     <ul>
-                                        <li>Catalyst1 weight:<span style={{ color: "white" }}> {expCat1}</span></li>
-                                        <li>Catalyst2 weight:<span style={{ color: "white" }}> {expCat2}</span></li>
-                                        <li>Accelerator weight:<span style={{ color: "white" }}> {expAcc}</span></li>
                                         <li>Resin weight:<span style={{ color: "white" }}> {resin}</span></li>
                                         <li>Initial Room Temperature:<span style={{ color: "white" }}> {initialRoomTemp} </span></li>
                                     </ul>
