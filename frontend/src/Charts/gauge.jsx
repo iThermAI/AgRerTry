@@ -87,18 +87,18 @@ const GaugeChart = () => {
     }, []);
 
     useEffect(() => {
-        if (temp.length > 0) {
+        if (temp) {
             setOption(prevOption => ({
                 series:
                 {
                     ...prevOption.series[0],
-                    data: [temp[temp.length - 1]],
+                    data: [temp],
                 },
             }));
         }
     }, [temp]);
 
-    return <ReactEcharts option={option} style={{ width: "80%", height: "100%", margin: "0 auto", minHeight: "28vh"}} />;
+    return <ReactEcharts option={option} style={{ width: "80%", height: "100%", margin: "0 auto", minHeight: "28vh" }} />;
 };
 
 export default GaugeChart;

@@ -35,11 +35,11 @@ function Navber(props) {
                     </IconButton>
                     <IconButton className="logo-size" sx={{ px: 1, margin: "0 6px" }}>
                         <Link to="/">
-                            <Avatar alt="Kyklos" className="logo-size" src={'logo.png'} />
+                            <Avatar alt="Kyklos" className="logo-size" src={'final_logo.PNG'} />
                         </Link>
                     </IconButton>
                     <Typography component="div" sx={{ flexGrow: 1 }} className='header-title'>
-                        VirtFuse Dashboard
+                    AgRerTry Dashboard
                     </Typography>
                     {props.auth === true ? (<div>
                         <IconButton
