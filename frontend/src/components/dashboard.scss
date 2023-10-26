@@ -90,6 +90,7 @@
   align-items: center;
 }
 
+
 .catRatio-box {
   display: flex;
   border-radius: 20px;
@@ -122,6 +123,27 @@
 
 .charts {
   display: flex;
+}
+
+
+.input-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.input {
+  max-width: 400px; /* Max width can be adjusted */
+  margin-top: 20px;
+  padding: 10px;
+  margin-right: 8px; /* space between input and button */
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  width: 100px; /* or any suitable width */
 }
 
 .image-container {
