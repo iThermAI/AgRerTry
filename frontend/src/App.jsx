@@ -43,7 +43,7 @@ export default function App() {
     setLogoutTimer(null);
   }
   // Get the value from backend
-  const [resin, setResin] = useState(null);
+  const [resin, setResin] = useState(0);
   const [temp, setTemp] = useState(null);
   const [cureSensorTemp, setCureSensorTemp] = useState(null);
   const [time, setTime] = useState([]);
@@ -59,59 +59,78 @@ export default function App() {
   const [requestInterval, setRequestInterval] = useState(null);
   const [status, setStatus] = useState(localStorage.getItem('status') ? localStorage.getItem('status') : null);
   // const [catRatio, setCatRatio] = useState(localStorage.getItem('catRatio') ? localStorage.getItem('catRatio') : null);
-  const [cat1, setCat1] = useState(localStorage.getItem('cat1') ? localStorage.getItem('cat1') : null);
-  const [cat2, setCat2] = useState(localStorage.getItem('cat2') ? localStorage.getItem('cat2') : null);
-  const [acc, setAcc] = useState(localStorage.getItem('acc') ? localStorage.getItem('acc') : null);
-  const [initialRoomTemp, setInitialRoomTemp] = useState(localStorage.getItem('initialRoomTemp') ? localStorage.getItem('initialRoomTemp') : 22);
+  const [cat1, setCat1] = useState(localStorage.getItem('cat1') ?? 0);
+  const [cat2, setCat2] = useState(localStorage.getItem('cat2') ?? 0);
+  const [acc, setAcc] = useState(localStorage.getItem('acc') ?? 0);
+  const [initialRoomTemp, setInitialRoomTemp] = useState(localStorage.getItem('initialRoomTemp') ? localStorage.getItem('initialRoomTemp') : 0);
   const [id, setId] = useState(null);
   const [score, setScore] = useState(null);
   const previousTimeRef = useRef(null);
   // const [expCatRatio, setExpCatRatio] = useState(null);
-  const [expCat1, setExpCat1] = useState(null);
-  const [expCat2, setExpCat2] = useState(null);
-  const [expAcc, setExpAcc] = useState(null);
 
   // const socket = new WebSocket();
   // socket.addEventListener('message', )
+  const formatNumber = (num) => {
+    if (num >= 1000000000000) {
+      return (num / 1000000000000).toFixed(3) + 'T';
+    } else if (num >= 1000000000) {
+      return (num / 1000000000).toFixed(3) + 'G';
+    }
+    else {
+      return (num / 1000000).toFixed(3) + 'M';
+    }
+  }
 
   useWebSocket('ws://localhost:9997', {
     onMessage: (event) => {
       setParts(event.data.replace(/\r/g, ' ').replace(/[a-zA-Z\n]/g, '').split(' '));
       // setTemp(prevTemp => [...prevTemp, parseFloat(parts[0])]);
       parseFloat(parts[0]) && setTemp(parseFloat(parts[0]));
+      // TODO: learn how to calculate R from sensor data???
+      // const curing = 3 * 1000000 * parseFloat(parts[1]) * parseFloat(parts[2])
+      const curing = 1000000 * parseFloat(parts[2])
 
       // setCureSensorTemp(prevCureTemp => [...prevCureTemp, parseFloat(parts[2])]);
-      parseFloat(parts[2]) && setCureSensorTemp(parseFloat(parts[2]));
+      setCureSensorTemp(formatNumber(curing));
     }
   })
 
-  const initiateExp = () => {
+  const initiateExp = (resinW) => {
     localStorage.setItem("status", "initiate");
     setStatus("initiate");
-    // this should return the best cat1,cat2,acc amounts for 24 kgs of resin.
-    axios.get("/api/initiate").then((res) => {
+    // this should return the best cat1,...
+    axios.post("/api/initiate", { resinW }).then((res) => {
       console.log(res.data);
-      // setCatRatio(res.data.catRatio);
-      setCat1(res.data.cat1);
-      setCat2(res.data.cat2);
-      setAcc(res.data.acc);
+      const data = {
+        cat1W: parseFloat(res.data.cat1W),
+        cat2W: parseFloat(res.data.cat2W),
+        accW: parseFloat(res.data.accW),
+        temp: parseFloat(res.data.temp),
 
-      // localStorage.setItem("catRatio", res.data.catRatio);
-      localStorage.setItem("cat1", res.data.cat1);
-      localStorage.setItem("cat2", res.data.cat2);
-      localStorage.setItem("acc", res.data.acc);
+      }
+      // setCatRatio(res.data.catRatio);
+      setCat1(data.cat1W);
+      setCat2(data.cat2W);
+      setAcc(data.accW);
+      setInitialRoomTemp(data.temp)
+
+      // localStorage.setItem("catRatio", data.catRatio);
+      localStorage.setItem("cat1", data.cat1W);
+      localStorage.setItem("cat2", data.cat2W);
+      localStorage.setItem("acc", data.accW);
+      localStorage.setItem("initialRoomTemp", data.temp)
     }).catch((err) => {
       console.log(err);
     });
   }
 
 
-  const startExp = async (cat1, cat2, cat3) => { // cat1,cat2,cat3
+  const startExp = async () => { // cat1,cat2,cat3
     clearInterval(requestInterval);
     localStorage.setItem("status", "start");
     setStatus("start");
 
-    await axios.post("/api/start", { cat1, cat2, cat3 }).then((res) => {
+    await axios.get("/api/start").then((res) => {
       console.log(res);
       setId(res.data.id);
     }).catch((err) => {
@@ -264,12 +283,6 @@ export default function App() {
             setCat2,
             acc,
             setAcc,
-            expCat1,
-            setExpCat1,
-            expCat2,
-            setExpCat2,
-            expAcc,
-            setExpAcc,
           }}>
             <Protect path='/dashboard' component={Dashboard} />
           </InformationContext.Provider>

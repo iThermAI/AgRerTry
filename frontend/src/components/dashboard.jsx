@@ -38,23 +38,19 @@ const Dashboard = () => {
         setCat2,
         acc,
         setAcc,
-        expCat1,
-        setExpCat1,
-        expCat2,
-        setExpCat2,
-        expAcc,
-        setExpAcc,
     } = useContext(InformationContext);
 
     // must implement a function to get the current ratio from api using experiment id or just get the last experiment ration
     // change this. TODO
     useEffect(() => {
         (async () => {
-            const { data: { ratio } } = await axios.get('/api/ratio')
-            await setExpCatRatio(ratio)
+            const { data: { resinW, cat1W, cat2W, accW } } = await axios.get('/api/weights')
+            await setCat1(parseFloat(cat1W));
+            await setCat2(parseFloat(cat2W));
+            await setAcc(parseFloat(accW));
+            await setResin(parseFloat(resinW));
         })()
     }, [])
-
     return (
         <>
             <div className="dashboard-container align-comp">
@@ -62,7 +58,7 @@ const Dashboard = () => {
                     <div style={{ position: "fixed" }}>
                         <ul>
                             <li className={`li-items ${status === "initiate" || status === "start" ? 'disabled' : ''}`}
-                                onClick={status !== "initiate" && status !== "start" ? initiateExp : null}>
+                                onClick={status !== "initiate" && status !== "start" ? () => initiateExp(resin) : null}>
                                 <PlayCircleFilledIcon sx={{ fontSize: "30px !important" }} />
                                 <span className="sidebar-btn-txt" >Start Experiment</span>
                                 <span className="sidebar-btn-txt-bottom">Start</span>
@@ -98,26 +94,26 @@ const Dashboard = () => {
                                     type="number"
                                     onChange={(e) => setResin(e.target.value)}
                                 />
-                                <Button className={`${(resin === null || resin === "") ? 'disabled-button' : ''}`}
-                                    variant="contained" onClick={initiateExp} sx={{
-                                    background: "#f9dd3f",
-                                    color: "black",
-                                    fontSize: "1em",
-                                    margin: "30px 0"
-                                }}>Start Experiment</Button>
+                                <Button className={`${(resin === 0 || resin === "") ? 'disabled-button' : ''}`}
+                                    variant="contained" onClick={() => initiateExp(resin)} sx={{
+                                        background: "#f9dd3f",
+                                        color: "black",
+                                        fontSize: "1em",
+                                        margin: "30px 0"
+                                    }}>Start Experiment</Button>
                             </div>
                         </div>
                     )}
 
                     {status === "initiate" && (
                         <div className={`warning-box ${status === "initiate" ? 'fade-in' : 'fade-out'}`}>
-                            <div style={{ margin: "5px" }}>Best Catalyst1 or trig93 weight in grams is: <span className='catRatio-info'>{(cat1 * resin / 24)}</span></div>
-                            <div style={{ margin: "5px" }}>Best Catalyst2 or trig524 weight in grams is: <span className='catRatio-info'>{(cat2 * resin / 24)}</span></div>
-                            <div style={{ margin: "5px" }}>Best Accelerator or cob 6% weight in grams is: <span className='catRatio-info'>{(acc * resin / 24)}</span></div>
+                            <div style={{ margin: "5px" }}>Best Catalyst1 or trig93 weight in grams is: <span className='catRatio-info'>{(cat1 ?? 0)}</span></div>
+                            <div style={{ margin: "5px" }}>Best Catalyst2 or trig524 weight in grams is: <span className='catRatio-info'>{(cat2 ?? 0)}</span></div>
+                            <div style={{ margin: "5px" }}>Best Accelerator or cob 6% weight in grams is: <span className='catRatio-info'>{(acc ?? 0)}</span></div>
                             <div style={{ marginTop: "10px" }}>If you are ready, press next to go to dashboard.</div>
                             <div>
-                                <Button 
-                                    variant="contained" onClick={() => startExp(expCat1, expCat2, expAcc)} sx={{
+                                <Button
+                                    variant="contained" onClick={startExp} sx={{
                                         background: "#f9dd3f",
                                         color: "black",
                                         fontSize: "1em",
@@ -129,7 +125,7 @@ const Dashboard = () => {
 
                     {(status === "start" || status === "finish") && (<div className={`dashboard-box ${(status === "start" || status === "finish") ? 'fade-in' : 'fade-out'}`}>
                         <div className="catRatio-box">
-                            recommended Catalyst1/Catalyst2/Acc/resin weights:  <span className='catRatio-info'>{cat1 ? cat1 * resin / 24 : 0},{cat2 ? cat2 * resin / 24 : 0},{acc? acc * resin / 24 : 0},{resin? resin : 0}</span>
+                            recommended Catalyst1/Catalyst2/Acc/resin weights:  <span className='catRatio-info'>{cat1},{cat2},{acc},{resin ?? 0}</span>
                         </div>
                         {status === "finish" && <div className="catRatio-box" style={{ background: "#5a1010" }}>
                             Final Score of Infusion: <span className='catRatio-info' style={{ background: "#3f0000" }}>{score}</span>
