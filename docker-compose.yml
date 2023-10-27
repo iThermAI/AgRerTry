@@ -1,21 +1,29 @@
 version: "3.8"
 
 services:
-
   frontend:
     build: ./frontend
+    networks: 
+      sina:
+        ipv4_address: 172.11.1.9
     container_name: frontend
     ports:
       - "4173:4173"
-    volumes:
-      - ./frontend/src:/usr/src/app/frontend/src
     depends_on:
       - node_backend
 
   node_backend:
     build: ./backend
     container_name: node_backend
+    networks: 
+      sina:
+        ipv4_address: 172.11.1.10
     ports: 
       - "9996:9996"
-    volumes:
-      - ./backend:/app/node_backend
+
+networks:
+  sina:
+    ipam:
+      driver: default
+      config: 
+        - subnet: 172.11.0.0/16

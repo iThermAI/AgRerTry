@@ -1,17 +1,18 @@
-FROM node:18.16.0-buster-slim
+FROM node:18.18.2-buster-slim
 
 WORKDIR  /usr/src/app/frontend
 
-COPY ./package.json ./package-lock.json ./
-
-RUN npm i --quiet && npm cache clean --force
-
 COPY . .
+
+RUN npm install
+
+
+EXPOSE 4173
 
 RUN npm run build
 
 
-CMD [ "npm", "run", "preview"]
+CMD [ "npm", "run", "preview", "--","--host"]
 
 # CMD [ "npm", "run", "dev" ]
 
