@@ -35,7 +35,7 @@ function Navber(props) {
                     </IconButton>
                     <IconButton className="logo-size" sx={{ px: 1, margin: "0 6px" }}>
                         <Link to="/">
-                            <Avatar alt="Kyklos" className="logo-size" src={'final_logo.PNG'} />
+                            <Avatar alt="Kyklos" className="logo-size" src={'logo.PNG'} />
                         </Link>
                     </IconButton>
                     <Typography component="div" sx={{ flexGrow: 1 }} className='header-title'>
