@@ -77,55 +77,55 @@ app.listen(port, () => {
 })
 
 
-// const server = new WebSocket.Server({ port: 9997 });
+const server = new WebSocket.Server({ port: 9997 });
 
 
-// const sensor_ip = '192.168.1.186';
-// const sensor_port = 25555;
+const sensor_ip = '192.168.1.186';
+const sensor_port = 25555;
 
-// const client = new net.Socket();
+const client = new net.Socket();
 
-// client.connect(sensor_port, sensor_ip, () => {
-//   console.log('Connected to the sensor.');
-// });
+client.connect(sensor_port, sensor_ip, () => {
+  console.log('Connected to the sensor.');
+});
 
 
-// server.on('connection', (ws) => {
-//   console.log('front connected');
-//   client.on('data', (data) => {
-//     ws.send(data.toString())
-//     console.log(data.toString());
-//     if (sampleIndex == 0) {
-//       const newTemp = parseFloat(data.toString().replace(/\r/g, ' ').replace(/[a-zA-Z\n]/g, '').split(' ')[0])
-//       if (newTemp) roomTempHistory.push(newTemp)
-//       // console.log('new!');
-//     }
-//     sampleIndex += 1
-//     sampleIndex = sampleIndex % SmaplingPeriod
-//     // console.log(roomTempHistory);
-//     // console.log('sent sensor data:', data.toString());
-//   });
-// });
+server.on('connection', (ws) => {
+  console.log('front connected');
+  client.on('data', (data) => {
+    ws.send(data.toString())
+    console.log(data.toString());
+    if (sampleIndex == 0) {
+      const newTemp = parseFloat(data.toString().replace(/\r/g, ' ').replace(/[a-zA-Z\n]/g, '').split(' ')[0])
+      if (newTemp) roomTempHistory.push(newTemp)
+      // console.log('new!');
+    }
+    sampleIndex += 1
+    sampleIndex = sampleIndex % SmaplingPeriod
+    // console.log(roomTempHistory);
+    // console.log('sent sensor data:', data.toString());
+  });
+});
 
-// if (streamVideo) {
+if (streamVideo) {
 
-//   new Stream({
-//     name: 'name',
-//     streamUrl: 'rtsp://admin:qwe%21%40%23123@192.168.1.64:554/Streaming/Channels/101',
-//     wsPort: 9998,
-//     ffmpegOptions: { // options ffmpeg flags
-//       '-stats': '', // an option with no neccessary value uses a blank string
-//       '-r': 30 // options with required values specify the value after the key
-//     }
-//   })
+  new Stream({
+    name: 'name',
+    streamUrl: 'rtsp://admin:qwe%21%40%23123@192.168.1.64:554/Streaming/Channels/101',
+    wsPort: 9998,
+    ffmpegOptions: { // options ffmpeg flags
+      '-stats': '', // an option with no neccessary value uses a blank string
+      '-r': 30 // options with required values specify the value after the key
+    }
+  })
 
-//   new Stream({
-//     name: 'name',
-//     streamUrl: 'rtsp://admin:qwe%21%40%23123@192.168.1.64:554/Streaming/Channels/201',
-//     wsPort: 9999,
-//     ffmpegOptions: { // options ffmpeg flags
-//       '-stats': '', // an option with no neccessary value uses a blank string
-//       '-r': 30 // options with required values specify the value after the key
-//     }
-//   })
-// }
+  new Stream({
+    name: 'name',
+    streamUrl: 'rtsp://admin:qwe%21%40%23123@192.168.1.64:554/Streaming/Channels/201',
+    wsPort: 9999,
+    ffmpegOptions: { // options ffmpeg flags
+      '-stats': '', // an option with no neccessary value uses a blank string
+      '-r': 30 // options with required values specify the value after the key
+    }
+  })
+}
