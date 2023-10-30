@@ -8,10 +8,6 @@ COPY . .
 
 RUN npm install
 
-RUN apt update && apt upgrade
-
-RUN apt-get install -y ffmpeg
-
 EXPOSE 9996
 
 CMD [ "npm", "start"]

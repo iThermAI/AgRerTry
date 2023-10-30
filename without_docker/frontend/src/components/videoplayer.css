@@ -1,0 +1,28 @@
+.videoContainer {
+    width: 400px;
+    /* Adjust width as required */
+    height: 320px;
+    /* Adjust height as required */
+    border: 3px solid #2c3e50;
+    /* Dark blue border */
+    border-radius: 8px;
+    /* Slight rounding of corners */
+    overflow: hidden;
+    /* To ensure nothing spills out */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    /* Slight shadow for depth */
+    margin: 20px;
+    /* Space around the player */
+    background-color: #34495e;
+    /* Dark blue background color */
+    display: flex;
+    align-items: center;
+    /* Center canvas vertically */
+    justify-content: center;
+    /* Center canvas horizontally */
+}
+
+.videoCanvas {
+    max-width: 100%;
+    max-height: 100%;
+}
