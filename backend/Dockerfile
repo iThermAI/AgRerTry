@@ -1,18 +1,13 @@
 FROM node:18.18.2-buster-slim
 
-WORKDIR  /app/node_backend
-
-# COPY ./package.json ./
-
-COPY . .
-
-RUN npm install
-
 RUN apt update && apt upgrade
-
 RUN apt-get install -y ffmpeg
 
+WORKDIR  /app/node_backend
 EXPOSE 9996
 
-CMD [ "npm", "start"]
+COPY ./package.json ./
+RUN npm install
+COPY . .
 
+CMD [ "npm", "start"]
